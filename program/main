@@ -1,0 +1,303 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Practic15
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //1
+            Robot robot = new Robot("Jo", 14);
+            ICharge charge = robot;
+            charge.Charge();
+            IWork work = robot;
+            work.Work();
+
+            //2
+            ISetTheLevel[] set = { new Lamps() };
+            foreach (var l in set)
+            {
+                l.SetLevel(12);
+            }
+            ITurnOnOrOff[] turnOnOrOffs = { new Lamps(), new Fan() };
+            foreach (var t in turnOnOrOffs)
+            {
+                t.TurnOff();
+                t.TurnOn();
+            }
+            //3 
+            Phone phone = new Phone();
+            IGettingAPrice gp = phone;
+            gp.GettingAPrice(45000);
+            IObtainingAWarranty ow = phone;
+            ow.ObtainingAWarranty(12);
+
+            Laptop laptop = new Laptop();
+            IGettingAPrice gpl = laptop;
+            gpl.GettingAPrice(97300);
+            IObtainingAWarranty owl = laptop;
+            owl.ObtainingAWarranty(36);
+            //4
+            IAttack[] attack = { new Berserk(), new Caster() };
+            foreach (var a in attack)
+            {
+                a.Attack();
+            }
+            Caster caster = new Caster();
+            IHealing healing = caster;
+            caster.Healing();
+            //5
+            BankAccount[] accounts = new BankAccount[2];
+            accounts[0] = new BankAccount(1000);
+            accounts[1] = new BankAccount(500);
+
+            Console.WriteLine($"Начальный баланс первого счёта: {accounts[0].Balance}");
+            Console.WriteLine($"Начальный баланс второго счёта: {accounts[1].Balance}");
+
+            accounts[0].Transfer(accounts[1], 300);
+
+            Console.WriteLine($"Баланс первого счёта после перевода: {accounts[0].Balance}");
+            Console.WriteLine($"Баланс второго счёта после перевода: {accounts[1].Balance}");
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Practic15
+{
+    //1
+    class Robot : IWork, ICharge
+    {
+        private int levelEnergy;
+        public string Name { get; set; }
+        public int LevelEnergy
+        {
+            get { return levelEnergy; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    levelEnergy = value;
+                }
+                else if (value > 100)
+                {
+                    levelEnergy = 100;
+                }
+                else
+                {
+                    levelEnergy = 0;
+                }
+            }
+        }
+        public Robot(string name, int levelEnergy)
+        {
+            Name = name;
+            LevelEnergy = levelEnergy;
+        }
+        public void Work()
+        {
+            if (LevelEnergy > 20)
+            {
+                LevelEnergy -= 20;
+                Console.WriteLine($"{Name}, энергия: {LevelEnergy}.");
+            }
+            else
+            {
+                Console.WriteLine($"{Name} не может работать, энергия: {LevelEnergy}.");
+            }
+        }
+        public void Charge()
+        {
+            if (LevelEnergy <= 50)
+            {
+                LevelEnergy += 50;
+                Console.WriteLine($"{Name}, энергия после зарядки:: {LevelEnergy}.");
+            }
+            else
+            {
+                LevelEnergy = 100;
+                Console.WriteLine($"{Name}, энергия после зарядки:: {LevelEnergy}.");
+            }
+        }
+    }
+    //2
+    class Lamps : ISetTheLevel, ITurnOnOrOff
+    {
+        private int level;
+        public int Level
+        {
+            get { return level; }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                { level = value; }
+                else
+                {
+                    level = 0;
+                }
+            }
+        }
+        public void TurnOn()
+        {
+            Level = 100;
+            Console.WriteLine($"Лампа включена.");
+        }
+        public void TurnOff()
+        {
+            Level = 0;
+            Console.WriteLine("Лампа выключена.");
+        }
+        public void SetLevel(int newLevel)
+        {
+            Level = newLevel;
+            if (Level == 0)
+            {
+                Console.WriteLine($"Лампа выключена, уровень: {Level}.");
+            }
+            else
+            {
+                Console.WriteLine($"Лампа включена, уровень: {Level}.");
+            }
+        }
+    }
+    class Fan : ITurnOnOrOff
+    {
+        public void TurnOn()
+        {
+            Console.WriteLine("Вентилятор включен.");
+        }
+        public void TurnOff()
+        {
+            Console.WriteLine("Вентилятор выключен.");
+        }
+    }
+    //3
+    class Phone : IGettingAPrice, IObtainingAWarranty
+    {
+        public int Price { get; set; }
+        public int WarrantyPeriod { get; set; }
+        public void GettingAPrice(int price)
+        {
+            if (price >= 15000)
+            {
+                Price = price;
+            }
+            else
+            {
+                Price = 15000;
+            }
+            Console.WriteLine($"Стоимость смартфона: {Price} руб.");
+        }
+        public void ObtainingAWarranty(int warrantyPeriod)
+        {
+            if (warrantyPeriod >= 6 && warrantyPeriod <= 24)
+            {
+                WarrantyPeriod = warrantyPeriod;
+            }
+            else
+            {
+                WarrantyPeriod = 12;
+            }
+            Console.WriteLine($"Срок гарантии на смартфон: {WarrantyPeriod} мес.");
+        }
+    }
+    class Laptop : IGettingAPrice, IObtainingAWarranty
+    {
+        public int Price { get; set; }
+        public int WarrantyPeriod { get; set; }
+        public void GettingAPrice(int price)
+        {
+            if (price >= 30000)
+            {
+                Price = price;
+            }
+            else
+            {
+                Price = 30000;
+            }
+            Console.WriteLine($"Стоимость ноутбука: {Price} руб.");
+        }
+        public void ObtainingAWarranty(int warrantyPeriod)
+        {
+            if (warrantyPeriod >= 6 && warrantyPeriod <= 36)
+            {
+                WarrantyPeriod = warrantyPeriod;
+            }
+            else
+            {
+                WarrantyPeriod = 12;
+            }
+            Console.WriteLine($"Срок гарантии на ноутбук: {WarrantyPeriod} мес.");
+        }
+    }
+    //4
+    class Berserk : IAttack
+    {
+        public void Attack()
+        {
+            Console.WriteLine($"Воин атакует.");
+        }
+    }
+    class Caster : IAttack, IHealing
+    {
+        public void Attack()
+        {
+            Console.WriteLine($"Маг атакует.");
+        }
+        public void Healing()
+        {
+            Console.WriteLine($"Маг лечит.");
+        }
+    }
+    //5
+    class BankAccount : IDepositOrWithdrawal, ITransfer
+    {
+        private decimal balance;
+        public BankAccount(decimal initialBalance)
+        {
+            if (initialBalance < 0)
+            {
+                throw new ArgumentException("Начальный баланс не может быть отрицательным.");
+            }
+            balance = initialBalance;
+        }
+        public void Deposit(decimal deposit)
+        {
+            if (deposit <= 0)
+            {
+                throw new ArgumentException("Сумма должна быть больше нуля.");
+            }
+            balance += deposit;
+            Console.WriteLine($"Внесено: {deposit}. Текущий баланс: {balance}");
+        }
+        public void Withdrawal(decimal withdrawal)
+        {
+            if (withdrawal <= 0)
+            {
+                throw new ArgumentException("Сумма должна быть больше нуля.");
+            }
+            if (withdrawal > balance)
+            {
+                throw new InvalidOperationException("Недостаточно средств на счёте.");
+            }
+            balance -= withdrawal;
+            Console.WriteLine($"Снято: {withdrawal}. Текущий баланс: {balance}");
+        }
+        public void Transfer(BankAccount targetAccount, decimal amount)
+        {
+            Withdrawal(amount);
+            targetAccount.Deposit(amount);
+            Console.WriteLine($"Переведено: {amount} на счёт с балансом: {targetAccount.balance}");
+        }
+        public decimal Balance => balance;
+    }
+}
