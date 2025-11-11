@@ -1,0 +1,58 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Practic15
+{
+    //1
+    interface IWork
+    {
+        void Work();
+    }
+    interface ICharge
+    {
+        void Charge();
+    }
+
+    //2
+    interface ISetTheLevel
+    {
+        void SetLevel(int level);
+    }
+    interface ITurnOnOrOff
+    {
+        void TurnOn();
+        void TurnOff();
+    }
+    //3
+    interface IGettingAPrice
+    {
+        void GettingAPrice(int Price);
+    }
+    interface IObtainingAWarranty
+    {
+        void ObtainingAWarranty(int warrantyPeriod);
+    }
+    //4
+    interface IHealing
+    {
+        void Healing();
+    }
+    interface IAttack
+    {
+        void Attack();
+    }
+    //5
+    interface IDepositOrWithdrawal
+    {
+        void Deposit(decimal deposit);
+        void Withdrawal(decimal withdrawal);
+    }
+    interface ITransfer
+    {
+        void Transfer(BankAccount targetAccount, decimal amount);
+    }
+
+}
